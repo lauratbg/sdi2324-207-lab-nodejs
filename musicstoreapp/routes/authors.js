@@ -2,7 +2,13 @@ module.exports = function (app) {
 
     //  a)
     app.get('/authors/add', function (req, res) {
-        res.render("authors/add.twig");
+        // lista de roles para el complementario2
+        let roles = ["cantante", "trompetista", "violinista", "saxofonista", "pianista"];
+        let response = {
+            seller: 'Tipos',
+            roles: roles
+        };
+        res.render("authors/add.twig", response);
     });
 
     //  b)
