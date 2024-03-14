@@ -39,6 +39,14 @@ module.exports = function (app) {
             "name": "Leire",
             "group": "La oreja de Van Gogh",
             "rol": "cantante"
+        }, {
+            "name": "Paula",
+            "group": "El sueño de morfeo",
+            "rol": "pianista"
+        }, {
+            "name": "Juan",
+            "group": "Amaral",
+            "rol": "trompetista"
         }];
 
         let response = {
@@ -49,9 +57,50 @@ module.exports = function (app) {
     });
 
 
+    //  complementario 3 (creo que es necesario ponerlo antes del comodín)
+    app.get('/authors/filter/:rol', function (req, res) {
+        let authors=[{
+            "name": "Paco",
+            "group": "Gritando en silencio",
+            "rol": "saxofonista"
+        }, {
+            "name": "Arnau",
+            "group": "Arnau Griso",
+            "rol": "cantante"
+        }, {
+            "name": "Leire",
+            "group": "La oreja de Van Gogh",
+            "rol": "cantante"
+        }, {
+            "name": "Paula",
+            "group": "El sueño de morfeo",
+            "rol": "pianista"
+        }, {
+            "name": "Juan",
+            "group": "Amaral",
+            "rol": "trompetista"
+        }];
+
+        let result = [];
+        for (let i = 0; i < authors.length; i++) {
+            if (authors[i].rol === req.params.rol) {
+                result.push(authors[i]);
+            }
+        }
+
+        let response = {
+            seller: 'Autores',
+            authors: result
+        };
+
+        res.render("authors/authors.twig", response);
+    });
+
     //  d)
     app.get('/autho*', function (req, res) {
         res.redirect("authors");
     });
+
+
 
 };
