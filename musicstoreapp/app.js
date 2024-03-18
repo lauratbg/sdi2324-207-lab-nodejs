@@ -9,13 +9,21 @@ var indexRouter = require('./routes/index');
 var app = express();
 
 let expressSession = require('express-session');
+
+
 app.use(expressSession({
     secret: 'abcdefg',
     resave: true,
     saveUninitialized: true
 }));
 
+const userSessionRouter = require('./routes/userSessionRouter');
+const userAudiosRouter = require('./routes/userAudiosRouter');
 
+app.use("/songs/add",userSessionRouter);
+app.use("/publications",userSessionRouter);
+app.use("/audios/",userAudiosRouter);
+app.use("/shop/",userSessionRouter)
 let crypto = require('crypto');
 
 let fileUpload = require('express-fileupload');
