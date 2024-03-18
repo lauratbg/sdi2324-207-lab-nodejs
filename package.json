@@ -3,7 +3,8 @@
   "Description": "Tienda de música",
   "version": "1.0.0",
   "dependencies": {
-    "express-fileupload": "^1.5.0"
+    "express-fileupload": "^1.5.0",
+    "express-session": "^1.18.0"
   },
   "devDependencies": {
     "@types/jest": "^29.2.5",
