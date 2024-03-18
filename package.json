@@ -3,11 +3,11 @@
   "Description": "Tienda de música",
   "version": "1.0.0",
   "dependencies": {
-
+    "express-fileupload": "^1.5.0"
   },
   "devDependencies": {
-    "jest": "^29.3.1",
-    "@types/jest": "^29.2.5"
+    "@types/jest": "^29.2.5",
+    "jest": "^29.3.1"
   },
   "scripts": {
     "test": "jest"
