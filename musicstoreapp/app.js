@@ -20,6 +20,7 @@ app.use(expressSession({
 const userSessionRouter = require('./routes/userSessionRouter');
 const userAudiosRouter = require('./routes/userAudiosRouter');
 
+
 app.use("/songs/add",userSessionRouter);
 app.use("/publications",userSessionRouter);
 app.use("/audios/",userAudiosRouter);
@@ -43,12 +44,19 @@ const { MongoClient } = require("mongodb");
 const connectionStrings = 'mongodb+srv://admin:sdi@musicstoreapp.hgay32z.mongodb.net/?retryWrites=true&w=majority&appName=musicstoreapp';
 const dbClient = new MongoClient(connectionStrings);
 
+const favoriteSongsRepository = require("./repositories/favoriteSongsRepository.js");
+favoriteSongsRepository.init(app, dbClient);
+
 let songsRepository = require("./repositories/songsRepository.js");
 songsRepository.init(app, dbClient);
 
 const usersRepository = require("./repositories/usersRepository.js");
 usersRepository.init(app, dbClient);
+
+
 require("./routes/users.js")(app, usersRepository);
+require("./routes/songs/favorites.js")(app, songsRepository, favoriteSongsRepository);
+
 
 
 require("./routes/songs.js")(app, songsRepository);

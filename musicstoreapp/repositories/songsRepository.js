@@ -17,7 +17,6 @@ module.exports = {
         } catch (error) {
             throw (error);
         }
-
     },
     getSongs: async function (filter, options) {
         try {
