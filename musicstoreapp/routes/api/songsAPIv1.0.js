@@ -1,5 +1,5 @@
 const {ObjectId} = require("mongodb");
-module.exports = function (app, songsRepository) {
+module.exports = function (app, songsRepository, usersRepository) {
     app.get("/api/v1.0/songs", function (req, res) {
         let filter = {};
         let options = {};
@@ -8,7 +8,7 @@ module.exports = function (app, songsRepository) {
             res.send({songs: songs})
         }).catch(error => {
             res.status(500);
-            res.json({ error: "Se ha producido un error al recuperar las canciones." })
+            res.json({error: "Se ha producido un error al recuperar las canciones."})
         });
     });
 
@@ -82,7 +82,7 @@ module.exports = function (app, songsRepository) {
             res.status(500);
             res.json({error: "Se ha producido un error al intentar crear la canción: " + e})
         }
-    }) ;
+    });
 
     app.put('/api/v1.0/songs/:id', function (req, res) {
         try {
@@ -105,26 +105,70 @@ module.exports = function (app, songsRepository) {
                     res.json({error: "ID inválido o no existe, no se ha actualizado la canción."});
                 }
                 //La _id No existe o los datos enviados no difieren de los ya almacenados.
-                else if (result.modifiedCount == 0){
+                else if (result.modifiedCount == 0) {
                     res.status(409);
-                res.json({error: "No se ha modificado ninguna canción."});
-            }
-        else{
-                res.status(200);
-                res.json({
-                    message: "Canción modificada correctamente.",
-                    result: result
-                })
-            }
-        }).catch(error => {
+                    res.json({error: "No se ha modificado ninguna canción."});
+                } else {
+                    res.status(200);
+                    res.json({
+                        message: "Canción modificada correctamente.",
+                        result: result
+                    })
+                }
+            }).catch(error => {
+                res.status(500);
+                res.json({error: "Se ha producido un error al modificar la canción."})
+            });
+        } catch (e) {
             res.status(500);
-            res.json({error : "Se ha producido un error al modificar la canción."})
-        });
-    } catch (e) {
-        res.status(500);
-        res.json({error: "Se ha producido un error al intentar modificar la canción: "+ e})
-    }
-});
-                    }
+            res.json({error: "Se ha producido un error al intentar modificar la canción: " + e})
+        }
+    });
+
+    app.post('/api/v1.0/users/login', function (req, res) {
+        try {
+            let securePassword = app.get("crypto").createHmac('sha256', app.get('clave')).update(req.body.password).digest('hex');
+            let filter = {
+                email: req.body.email,
+                password: securePassword
+            }
+            let options = {};
+            usersRepository.findUser(filter, options).then(user => {
+                if (user == null) {
+                    res.status(401); //Unauthorized
+                    res.json({
+                        message: "usuario no autorizado",
+                        authenticated: false
+                    })
+                } else {
+                    let token = app.get('jwt').sign(
+                        {user: user.email, time: Date.now() / 1000},
+                        "secreto");
+                    res.status(200);
+                    res.json({
+                        message: "usuario autorizado",
+                        authenticated: true,
+                        token: token
+                    })
+                }
+            }).catch(error => {
+                res.status(401);
+                res.json({
+                    message: "Se ha producido un error al verificar credenciales",
+                    authenticated: false
+                })
+            })
+        } catch (e) {
+            res.status(500);
+            res.json({
+                message: "Se ha producido un error al verificar credenciales",
+                authenticated: false
+            })
+        }
+
+
+    })
+    ;
+}
 
 
