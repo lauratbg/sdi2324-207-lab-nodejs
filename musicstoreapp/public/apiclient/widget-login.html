@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Login</title>
 </head>
 <body>
 <div id="widget-login">
@@ -29,6 +29,7 @@
 </body>
 </html>
 <script>
+  window.history.pushState("", "", "/apiclient/client.html?w=login");
   $("#boton-login").click(function () {
     $.ajax({
       url: URLbase + "/users/login",
@@ -41,9 +42,11 @@
       success: function success(response) {
         console.log(response.token); // Prueba.
         token = response.token;
+        Cookies.set('token', token);
         $("#main-container").load("widget-songs.html");
       },
       error: function (error) {
+        Cookies.remove('token');
         $("#widget-login")
                 .prepend("<div class='alert alert-danger'>Usuario no encontrado</div>");
       }
