@@ -85,10 +85,24 @@ module.exports = function (app, songsRepository) {
         songsRepository.findSong(filter, options).then(song => {
             isPurchased(songId, req.session.user, songsRepository, function(result) {
                 isTheAuthorLogged(songId, req.session.user, songsRepository, function(result2) {
-                    song.isPurchased = result;
-                    song.isTheAuthorLogged = result2;
-                    console.log(result2);
-                    res.render("songs/song.twig", {song: song});
+                    let settings = {
+                        url: "https://api.currencyapi.com/v3/latest?apikey=cur_live_ticr20GzpYN0ZQ6PGQE0TjvNvcYx9oj8VSSoO4tL&base_currency=EUR&currencies=USD",
+                        method: "get",
+                    }
+                    let rest = app.get("rest");
+                    rest(settings, function (error, response, body) {
+                        console.log("cod: " + response.statusCode + " Cuerpo :" + body);
+                        let responseObject = JSON.parse(body);
+                        let rateUSD = responseObject.data.USD.value;
+                        // nuevo campo "usd" redondeado a dos decimales
+                        let songValue = song.price / rateUSD
+                        song.usd = Math.round(songValue * 100) / 100;
+                        song.isPurchased = result;
+                        song.isTheAuthorLogged = result2;
+                        console.log(result2);
+                        res.render("songs/song.twig", {song: song});
+                    });
+
 
                 });
             });

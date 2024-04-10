@@ -18,7 +18,7 @@
 						  <source src="/audios/{{ song._id }}.mp3" type="audio/mpeg">
 					  </audio>
 				  {% else %}
-					  <button type="submit" class="btn btn-primary">Comprar: {{ song.price }}€</button>
+					  <button type="submit" class="btn btn-primary">Comprar: {{ song.price }}€ - {{ song.usd }} $</button>
 				  {% endif %}
 			  </form>
 
