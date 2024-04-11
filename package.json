@@ -5,7 +5,9 @@
   "dependencies": {
     "express-fileupload": "^1.5.0",
     "express-session": "^1.18.0",
+    "express-validator": "^7.0.1",
     "g": "^2.0.1",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.5.0",
     "nodemon": "^3.1.0",
     "request": "^2.88.2"
